@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Course Outline</h2>
+    <table id="courseTable">
+        <thead>
+            <tr>
+                    <th colspan="3">name</th>
+                    <th>section id</th>
+                    <th>is completed by user</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            // let course_outline = {
+            //     "section": {
+            //         "id": "this is section id",
+            //         "name": "section name",
+            //         "has_ended": true,
+            //         "subsection": {
+            //             "id": "this is sub section id",
+            //             "name": "sub section name",
+            //             "has_ended": true,
+            //             "unit": {
+            //                 "id": "this is unit id",
+            //                 "name": "unit name",
+            //                 "has_ended": true
+            //             }
+            //         }
+            //     }
+            // };
+
+            let course_outline = 
+            [
+            {
+                "id": "section_1",
+                "name": "Section One",
+                "has_ended": false,
+                "subsections": [
+                    {
+                        "id": "subsection_1_1",
+                        "name": "Subsection 1.1",
+                        "has_ended": true,
+                        "units": [
+                            {
+                                "id": "unit_1_1_1",
+                                "name": "Unit 1.1.1",
+                                "has_ended": false
+                            },
+                            {
+                                "id": "unit_1_1_2",
+                                "name": "Unit 1.1.2",
+                                "has_ended": true
+                            }
+                        ]
+                    },
+                    {
+                        "id": "subsection_1_2",
+                        "name": "Subsection 1.2",
+                        "has_ended": false,
+                        "units": [
+                            {
+                                "id": "unit_1_2_1",
+                                "name": "Unit 1.2.1",
+                                "has_ended": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "section_2",
+                "name": "Section Two",
+                "has_ended": true,
+                "subsections": [
+                    {
+                        "id": "subsection_2_1",
+                        "name": "Subsection 2.1",
+                        "has_ended": true,
+                        "units": [
+                            {
+                                "id": "unit_2_1_1",
+                                "name": "Unit 2.1.1",
+                                "has_ended": false
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+            
+
+            function sectionData(level, data) {
+                $("#courseTable tbody").append(`
+                    <tr>
+                        <td colspan="3" >${data.name}</td>
+                        <td>${data.id}</td>
+                        <td>${data.has_ended ? 'Yes' : 'No'}</td>
+                    </tr>
+                `);
+            }
+            function subSectionData(level, data) {
+                $("#courseTable tbody").append(`
+                    <tr>
+                        <td></td>
+                        <td colspan="2" >${data.name}</td>
+                        <td>${data.id}</td>
+                        <td>${data.has_ended ? 'Yes' : 'No'}</td>
+                    </tr>
+                `);
+            }
+            function unitData(level, data) {
+                $("#courseTable tbody").append(`
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>${data.name}</td>
+                        <td>${data.id}</td>
+                        <td>${data.has_ended ? 'Yes' : 'No'}</td>
+                    </tr>
+                `);
+            }
+
+            function show_course_outline(course_outline){
+                course_outline.forEach(section => {
+                    $("#courseTable tbody").append(`
+                            <tr>
+                                <td colspan="3" >${section.name}</td>
+                                <td>${section.id}</td>
+                                <td>${section.has_ended ? '✅' : '❌'}</td>
+                            </tr>
+                        `);
+                    console.log("section row")
+                    section.subsections.forEach(subsection => {
+                            $("#courseTable tbody").append(`
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2" >${subsection.name}</td>
+                                    <td>${subsection.id}</td>
+                                    <td>${subsection.has_ended ? '✅' : '❌'}</td>
+                                </tr>
+                            `);
+                            console.log("subsection row")
+                            subsection.units.forEach(unit => {
+                                    $("#courseTable tbody").append(`
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>${unit.name}</td>
+                                            <td>${unit.id}</td>
+                                            <td>${unit.has_ended ? 'Yes' : 'No'}</td>
+                                        </tr>
+                                    `); 
+                                    console.log("unit row")
+                            });
+                    });
+            });
+
+            }
+
+            
+
+            // Populate table with data
+            show_course_outline(course_outline)
+            sectionData("Section", course_outline.section);
+            subSectionData("Subsection", course_outline.section.subsection);
+            unitData("Unit", course_outline.section.subsection.unit);
+        });
+    </script>
+
+</body>
+</html>
